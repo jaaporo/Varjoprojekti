@@ -4,16 +4,6 @@
 
 void initializeLeds();
 
-/*
-  setLed(byte) sets correct led number given as 0,1,2 or 3
-  led number 0 corresponds to led connected at Arduino pin A2
-  led number 1 => Arduino pin A3
-  led number 2 => Arduino pin A4
-  led number 3 => Arduino pin A5
-  
-  parameters:
-  byte ledNumber is 0,1,2 or 3
-*/
 void setLed(byte ledNumber);
 
 /*
