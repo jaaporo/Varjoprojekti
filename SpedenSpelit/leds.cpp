@@ -2,10 +2,15 @@
 #include "gamelogic.h"
 
 void initializeLeds() {
+  pinMode(A2, OUTPUT);
+  pinMode(A3, OUTPUT);
+  pinMode(A4, OUTPUT);
+  pinMode(A5, OUTPUT);
   digitalWrite(A2, LOW);
   digitalWrite(A3, LOW);
   digitalWrite(A4, LOW);
   digitalWrite(A5, LOW);
+  
 }
 
 void setLed(byte ledNumber) {
