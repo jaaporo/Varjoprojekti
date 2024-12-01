@@ -31,6 +31,6 @@ void show1(void);
   int rounds: This parameter determines how many times 0,1,2,3 sequence
               is shown. 
 */
-void show2(int);
+void show2();
 
 #endif

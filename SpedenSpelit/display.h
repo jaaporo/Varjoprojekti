@@ -1,8 +1,12 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 #include <arduino.h>
-
-
+const byte d_firstPin = 8;                 // Ensimmäinen nappi
+const byte d_lastPin = 12;
+const int rclkPin = 10;  // RCLK shiftclock
+const int srclkPin = 11;  // SRCLK serialclock
+const int serPin = 8;    // SER
+const int srclrPin= 12; 
 /*
   initializeDisplay subroutine initializes 5 pins needed for controlling 7-segment
   displays in a cascade as follows:

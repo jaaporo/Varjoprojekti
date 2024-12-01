@@ -3,10 +3,8 @@
 
 char serialBuffer[50];
 volatile bool bufferReady = false;
-//volatile bool gameRunning = false;
-//volatile bool timeToCheckGameStatus;
-//volatile int userNumber[100];
-//volatile int roundNum;
+volatile int buttonPressed;
+
 // Jokaisen napin debounce-seuranta
 volatile unsigned long lastDebounceTime[5] = { 0 };               // 5 napille
 volatile bool buttonState[5] = { HIGH, HIGH, HIGH, HIGH, HIGH };  // 5 napin tila
@@ -39,47 +37,37 @@ ISR(PCINT2_vect) {
 
       // Jos nappi on painettu alas (LOW)
       if (currentState == LOW) {
-        /*
-        Serial.print("Nappia painettu: ");
-        Serial.println(pin-2);
-        */
-        // Tarkista, aloittaako nappi 6 pelin
 
-        if (gameRunning == true) {
           switch (pin) {
             case BUTTON0:
-
-              userNumber[roundNum] = 0;
+              buttonPressed = 0;
               break;
 
             case BUTTON1:
-
-              userNumber[roundNum] = 1;
+              buttonPressed = 1;
               break;
 
             case BUTTON2:
-
-              userNumber[roundNum] = 2;
+              buttonPressed = 2;
               break;
 
             case BUTTON3:
-
-              userNumber[roundNum] = 3;
+              buttonPressed = 3;
               break;
+
             case BUTTON4:
-              Serial.println("testi");
-              stopTheGame();  // Lopetetaan peli virheen vuoksi
+              buttonPressed = 4;
+
               break;
             default:
-              Serial.println("Virheellinen syöte!");
-              stopTheGame();  // Lopetetaan peli virheen vuoksi
+              buttonPressed = 4;  // Lopetetaan peli virheen vuoksi
               break;
           };
           timeToCheckGameStatus = true;
+        } 
+         
         }
-      } else if (pin == 6 & gameRunning == false) {
-        startTheGame();
       }
     }
-  }
-}
+  
+

@@ -14,24 +14,22 @@ volatile int gameSpeed = 15624;  // Alustettu nopeus (1 Hz)
 volatile byte randomNumber = 10;
 volatile bool ledsSet = false;
 volatile bool timerinterrupt = false;
+bool gameCorrect = true;
 
-void initializeTimer() {
+void initializeGame() {
+  roundNum = 0;
+  gameRunning = false;
+  timeToCheckGameStatus = false;
+  randomSeed(analogRead(0));
   cli();       // Disable global interrupts
   TCCR1A = 0;  // Ensure TCCR1A is cleared
   TCCR1B = (1 << WGM12);
   OCR1A = 15624;  // For 1 Hz with 16 MHz clock and 1024 prescaler
 
-  roundNum = 0;
   // TCNT1 = 0;              //nollataan laskuri
   TCCR1B |= (1 << CS12) | (1 << CS10);
   TIMSK1 = (1 << OCIE1A);  //ylivuoto-keskeytyksen salliminen Timer1:lle
   sei();                   // Enable global interrupts
-}
-void initGame() {
-  roundNum = 0;
-  gameRunning = false;
-  timeToCheckGameStatus = false;
-  randomSeed(analogRead(0));
 }
 
 void startTheGame() {
@@ -39,6 +37,7 @@ void startTheGame() {
   roundNum = 0;
   randomNumber = NOT_SET;
   gameSpeed = 15624;
+  timeToCheckGameStatus = false;
   // Set Timer1 to CTC mode (WGM12 = 1, WGM13:0 = 0)
 
   for (int i = 0; i < 100; i++) {
@@ -54,18 +53,19 @@ void startTheGame() {
 
 void stopTheGame() {
   gameRunning = false;
-
+timeToCheckGameStatus = false;
   TIMSK1 &= ~(1 << OCIE1A);  // Poistetaan Timer1:n ylivuotokeskeytys
   //TIMSK1 &= ~(1 << TOIE1);  // Poistetaan Timer1:n ylivuotokeskeytys
   Serial.println("Peli päättyy!");
 }
 
 void checkGame() {
-  bool gameCorrect = true;
+gameCorrect = true;
 
   // Vertaillaan käyttäjän syötteitä ja arvottuja numeroita
   for (int i = 0; i < 99; i++) {
     if (userNumber[i] != randomNumbers[i]) {
+
       gameCorrect = false;
       Serial.println("mismatch");
       Serial.println(i);

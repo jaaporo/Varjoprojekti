@@ -11,10 +11,10 @@ extern volatile int gameSpeed;               // Pelin nopeus
 extern volatile byte randomNumber;
 extern volatile bool ledsSet;
 extern volatile bool timerinterrupt;
-void initializeTimer(void);
+extern bool gameCorrect;
 void startTheGame(void);
 void stopTheGame(void);
-void initGame();
+void initializeGame();
 void checkGame();
 void increaseGameSpeed();
 #endif

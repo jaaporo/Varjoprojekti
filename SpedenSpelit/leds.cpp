@@ -10,11 +10,10 @@ void initializeLeds() {
   digitalWrite(A3, LOW);
   digitalWrite(A4, LOW);
   digitalWrite(A5, LOW);
-  
 }
 
 void setLed(byte ledNumber) {
-  clearAllLeds();
+ // clearAllLeds();
   switch (ledNumber) {
     case 0:
       digitalWrite(A2, HIGH);  // Sytytetään ledi 0 (A2)
@@ -50,26 +49,51 @@ void setAllLeds() {
 
 
 void show1() {
-  // Näytetään binäärilukuja 0-15 ledeillä
-  for (byte i = 0; i < 16; i++) {
-    // Käytetään binääriesitystä
-    for (byte bit = 0; bit < 4; bit++) {
-      if (i & (1 << bit)) {
-        setLed(bit);  // Sytytetään vastaava ledi
-      } else {
-        clearAllLeds();  // Sammutetaan kaikki ledit
+
+
+    // Näytetään binäärilukuja 0-15 ledeillä
+    for (byte i = 0; i < 16; i++) {
+      // Käytetään binääriesitystä
+      for (byte bit = 0; bit < 4; bit++) {
+        if (i & (1 << bit)) {
+          setLed(bit);  // Sytytetään vastaava ledi
+        }   // Sammutetaan kaikki ledit
+        
+        
+        if (timeToCheckGameStatus == true) {
+          goto escapeshow;
+        }
+      
       }
       delay(500);  // Viivästys, jotta binääriluku näkyy
+      clearAllLeds();
+      delay(500);
     }
+    escapeshow:
+    clearAllLeds();
+    delay(1000);
   }
-}
-void show2(int rounds) {
+
+void show2() {
+  int nopeus = 1000;
   // Tehdään "valoshow", jossa ledit syttyvät vuorotellen
-  for (int i = 0; i < rounds; i++) {
+  for (int i = 0; i < 100; i++) {
     for (byte led = 0; led < 4; led++) {
       setLed(led);  // Sytytetään ledit yksi kerrallaan
-      delay(500);   // Viive
+
+      if (timeToCheckGameStatus == true) {
+          goto escapeshow;
+        }
+         delay(nopeus); 
     }
-    delay(500);  // Pieni viive ennen toistoa
+    nopeus = nopeus *0.8;
+    clearAllLeds();
+    delay(nopeus);  // Pieni viive ennen toistoa
+      if (timeToCheckGameStatus == true) {
+          goto escapeshow;
+        }
   }
+   escapeshow:
+    clearAllLeds();
+    delay(1000);
 }

@@ -17,7 +17,7 @@ enum BUTTONALIAS {
 const byte firstPin = 2;                 // Ensimmäinen nappi
 const byte lastPin = 6;                  // Viimeinen nappi
 const unsigned long debounceDelay = 40;  // Debounce-viive millisekunneissa
-
+extern volatile int buttonPressed;
 extern char serialBuffer[50];
 extern volatile bool bufferReady;
 

@@ -2,13 +2,15 @@
 #include <Arduino.h>
 #include "gamelogic.h"
 #include "leds.h"
+#include "display.h"
 
 void setup() {
 
   randomSeed(analogRead(0));
-  initializeTimer();
+  initializeGame();
   initButtonsAndButtonInterrupts();
   initializeLeds();
+  initializeDisplay();
 
   Serial.begin(9600);
   while (!Serial) {
@@ -19,27 +21,45 @@ void setup() {
 }
 
 void loop() {
+  writeByte(6, true);
+  /* 
+    jos peli on aloitettu ja kierroksen ajastin on loppunut tarkistetaan vastaako listat toisiaan
+    kutsutaan aina increasegamespeed joka nopeuttaa ajastinta 10 kierroksen välein
+    tallennetaan uusi randomnumero taulukkoon ja sytytetään vastaava ledi.
+  */
   if (gameRunning == true) {
-    if (timerinterrupt == true & randomNumber != NOT_SET) {
+    if (timerinterrupt == true & randomNumber != NOT_SET) { //odotetaan ajastimen asettavan ainakin yksi randomnumero
       timerinterrupt = false;  //Estetään looppaaminen
       checkGame();             //Kierros päättyy viimeistään tähän
       roundNum++;
-      increaseGameSpeed();
+      increaseGameSpeed(); //uusi kierros alkaa tästä
       randomNumbers[roundNum] = randomNumber;  // Tallennetaan numero taulukkoon
+      clearAllLeds();
       setLed(randomNumbers[roundNum]);
-      //timeToCheckGameStatus = true;
     }
   }
 
   if (timeToCheckGameStatus == true) {
-    checkGame();
-    clearAllLeds();
-  }
+    if (gameRunning == false & buttonPressed == 4) {
+      startTheGame();
+   
+    } else if (gameRunning == true & buttonPressed == 4) {
+      stopTheGame();
 
-  /*
-  if (timer_interrupt == 1) {
-    Serial.println(timer_interrupt);
-    timer_interrupt = 0 ;
+    } else if (gameRunning == true) {
+      userNumber[roundNum] = buttonPressed;
+      checkGame();
+      clearAllLeds();
+       
+    }
   }
-  */
+  if (gameRunning == false){
+    if (gameCorrect == false){
+      show2();
+    }
+    else{
+show1();
+    }
+    
+  }
 }
